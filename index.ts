@@ -7,19 +7,8 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { tasksRouter } from './src/tasks/tasks.router';
-import { MYSQL_DB, MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, PORT } from './db.config';
+import { MYSQL_DB, MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD } from './db.config';
 
-declare global {
-  namespace NodeJS {
-    interface ProcessEnv {
-      MYSQL_HOST: string;
-      MYSQL_USER: string;
-      MYSQL_PASSWORD: string;
-      MYSQL_DB: string;
-      PORT?: string;
-    }
-  }
-}
 
 // Instantiate express app
 const app: Express = express();
@@ -44,13 +33,13 @@ export const AppDataSource = new DataSource({
 });
 
 // Define sever port
-const port = PORT;
+const port = process.env.PORT || 3000;
 
 AppDataSource.initialize()
   .then(() => {
-    // Start listenting to the requests on the defined port
+    // Start listening to the requests on the defined port
     app.listen(port);
-    console.log(`Data Source has been initialized on ${PORT}!`);
+    console.log(`Data Source has been initialized on ${port}!`);
   })
   .catch((err) => {
     console.error(
