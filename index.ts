@@ -7,6 +7,7 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { tasksRouter } from './src/tasks/tasks.router';
+import { MYSQL_DB, MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, PORT } from './db.config';
 
 declare global {
   namespace NodeJS {
@@ -33,23 +34,23 @@ app.use(cors());
 // Create Database Connection
 export const AppDataSource = new DataSource({
   type: 'mysql',
-  host: process.env.MYSQL_HOST,
+  host: MYSQL_HOST,
   port: 3306,
-  username: process.env.MYSQL_USER,
-  password: process.env.MYSQL_PASSWORD,
-  database: process.env.MYSQL_DB,
+  username: MYSQL_USER,
+  password: MYSQL_PASSWORD,
+  database: MYSQL_DB,
   entities: [Task],
   synchronize: true,
 });
 
 // Define sever port
-const port = process.env.PORT;
+const port = PORT;
 
 AppDataSource.initialize()
   .then(() => {
     // Start listenting to the requests on the defined port
     app.listen(port);
-    console.log('Data Source has been initialized!');
+    console.log(`Data Source has been initialized on ${PORT}!`);
   })
   .catch((err) => {
     console.error(
