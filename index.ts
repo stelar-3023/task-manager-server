@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-namespace */
 import express, { Express } from 'express';
 
 import { DataSource } from 'typeorm';
@@ -6,6 +7,18 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { tasksRouter } from './src/tasks/tasks.router';
+
+declare global {
+  namespace NodeJS {
+    interface ProcessEnv {
+      MYSQL_HOST: string;
+      MYSQL_USER: string;
+      MYSQL_PASSWORD: string;
+      MYSQL_DB: string;
+      PORT?: string;
+    }
+  }
+}
 
 // Instantiate express app
 const app: Express = express();
@@ -20,7 +33,7 @@ app.use(cors());
 // Create Database Connection
 export const AppDataSource = new DataSource({
   type: 'mysql',
-  host: 'localhost',
+  host: process.env.MYSQL_HOST,
   port: 3306,
   username: process.env.MYSQL_USER,
   password: process.env.MYSQL_PASSWORD,
